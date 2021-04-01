@@ -16,8 +16,8 @@ const PORT = process.env.PORT || 5000
 */
 
 // Load express middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(morgan('combined'))
 
 /**
@@ -26,7 +26,36 @@ app.use(morgan('combined'))
 
 // Manifest Route. Returns data about the integration
 app.get('/', function (req, res) {
-  res.status(200).send({ name: 'example-addon' })
+  let body = JSON.stringify({
+    name: "Astra Netlify Addon",
+    description: "This addon creates and utilizes an Astra (Cassandra as a Service) database.",
+    admin_url: 'https://astra.datastax.com',
+    config: {
+      "appToken": {
+        /* An alternate, human-friendly name. */
+        "displayName": "Application Token",
+        /*  Description of option shown to user  */
+        "description": "From the Astra dashboard, click on the name of your database.\n" +
+                       "On the following screen, click the 'Settings' tab at the top of the screen.\n" +
+                       "Select 'API Admin User' from the dropdown and click 'Generate Token'\n" +
+                       "Copy the 'Token' value and use that to set this value\n",
+        "type": "string",
+        "required": true,
+      },
+      "adminToken": {
+        /* An alternate, human-friendly name. */
+        "displayName": "Database Administration Token",
+        /*  Description of option shown to user  */
+        "description": "From the Astra dashboard, click on the name of your database.\n" +
+                       "On the following screen, click the 'Settings' tab at the top of the screen.\n" +
+                       "Select 'Database Administrator' from the dropdown and click 'Generate Token'\n" +
+                       "Copy the 'Token' value and use that to set this value\n",
+        "type": "string",
+        "required": true,
+      },
+    },
+  })
+  res.status(200).send(body)
 })
 
 // Create an instance of your Service for Netlify Site
